@@ -47,3 +47,21 @@ fs.readdir(fixturesPath, function(err, files) {
     }
 });
 
+// test options.textNodeKey custom value
+var xml = '<a href="http://example.com">Example Site</a>';
+var actual = parser.toJson(xml, {object: true, textNodeKey: 'hi'});
+var json = '{"a":{"href":"http://example.com","hi":"Example Site"}}';
+assert.deepEqual(actual, JSON.parse(json));
+
+// test options.textNodeKey default value
+var actual = parser.toJson(xml, {object: true});
+var json = json.replace('"hi":', '"$t":');
+assert.deepEqual(actual, JSON.parse(json));
+
+console.log('[xml2json options.textNodeKey] passed');
+
+// test options.attributes = false
+var actual = parser.toJson(xml, {object: true, attributes: false});
+var json = '{"a": "Example Site"}'
+assert.deepEqual(actual, JSON.parse(json));
+console.log('[xml2json options.attributes] passed');
